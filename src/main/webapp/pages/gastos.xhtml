@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Gastos Pessoais</title>
+</h:head>
+<h:body>
+	<h:form id="formCadastro">
+		<p:panel id="panelcad" header="Cadastro">
+			<h:panelGrid columns="4">
+				<p:outputLabel value="Descrição:" />
+				<p:inputText value="#{gastosBean.gasto.nome}" />
+
+				<p:outputLabel value="Valor:" />
+				<p:inputText value="#{gastosBean.gasto.valor}" />
+
+				<p:outputLabel for="menu" value="Tag Tipo:" />
+
+				<p:selectOneMenu id="menu" filter="true"
+					value="#{gastosBean.gasto.tipo}"
+					converter="omnifaces.SelectItemsConverter" required="true"
+					requiredMessage="O campo tipo é obrigatório">
+					<f:selectItem noSelectionOption="true"
+						itemLabel="Selecione uma tipo" />
+					<f:selectItems value="#{tipoBean.tipos}" var="tipo"
+						itemValue="#{tipo}" itemLabel="#{tipo.nome}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Data:" />
+				<p:calendar value="#{gastosBean.gasto.horario}" />
+
+				<p:outputLabel value="Debito:" />
+				<p:selectBooleanCheckbox value="#{gastosBean.gasto.debito}">
+					<f:selectItem itemValue="débito" itemLabel="Débito" />
+				</p:selectBooleanCheckbox>
+
+
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<p:outputLabel value="Parcelas:" />
+				<p:inputText value="#{gastosBean.gasto.parcelas}" />
+				<p:commandButton value="Salvar" update=":formCadastro:panelcad"
+					actionListener="#{gastosBean.salvar()}">
+					<f:actionListener
+						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+				</p:commandButton>
+				<p:commandButton value="Cadastro" oncomplete="PF('dialogo').show();"
+					actionListener="#{tipoBean.listar}"
+					update=":formCadastroTag:tabelaTag :formCadastro:panelcad">
+					<f:actionListener
+						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+				</p:commandButton>
+				<p:commandButton value="Relatório"
+					actionListener="#{gastosBean.listar}"
+					oncomplete="PF('dialogo3').show();"
+					update=":formReport:tabrelatorio" />
+				<p:commandButton value="Gráfico" />
+			</h:panelGrid>
+
+
+
+		</p:panel>
+	</h:form>
+
+
+
+	<p:dialog header="Tipos de Tag - Cadastro" widgetVar="dialogo"
+		draggable="false" resizable="false" modal="true" closable="true">
+		<h:form id="formCadastroTag">
+			<h:panelGrid id="painel" columns="2">
+				<p:dataTable id="tabelaTag"
+					emptyMessage="Nenhum registro encontrado" paginator="true"
+					value="#{tipoBean.tipos}" var="tipo" rows="5">
+					<p:column headerText="Tipos de despesas" filterBy="#{tipo.nome}"
+						sortBy="#{tipo.nome}">
+						<h:outputText value="#{tipo.nome}" />
+					</p:column>
+					<p:column>
+						<p:commandButton icon="ui-icon-trash"
+							actionListener="#{tipoBean.excluir}"
+							update=":formCadastroTag:tabelaTag">
+							<f:attribute name="tipoSelecionado" value="#{tipo}" />
+						</p:commandButton>
+					</p:column>
+
+
+				</p:dataTable>
+				<h:panelGrid columns="1">
+					<p:commandButton icon="ui-icon-plus"
+						actionListener="#{tipoBean.novo()}"
+						oncomplete="PF('dialogo2').show();"
+						update=":NovoCadastroTag:painel2" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:commandButton value="Sair" oncomplete="PF('dialogo').hide();"
+					actionListener="#{tipoBean.listar()}" update=":formCadastro:menu">
+					<f:actionListener
+						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+
+				</p:commandButton>
+			</h:panelGrid>
+
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Cadastro nova tag" widgetVar="dialogo2"
+		draggable="false" resizable="false" modal="true" closable="true">
+		<h:form id="NovoCadastroTag">
+			<h:panelGrid id="painel2" columns="2">
+				<p:outputLabel value="Descrição:" />
+				<p:inputText id="name" maxlength="50" size="30" required="true"
+					value="#{tipoBean.tipo.nome}"
+					requiredMessage="O campo nome é obrigatório" />
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<p:commandButton value="Salvar" oncomplete="PF('dialogo2').hide();"
+					actionListener="#{tipoBean.salvar}"
+					update=":formCadastroTag:tabelaTag :NovoCadastroTag">
+				</p:commandButton>
+			</h:panelGrid>
+
+		</h:form>
+	</p:dialog>
+
+
+	<p:dialog header="Report" widgetVar="dialogo3" draggable="false"
+		resizable="false" modal="true" closable="true">
+		<h:form id="formReport">
+			<h:panelGrid id="painel3" columns="2">
+				<p:dataTable id="tabrelatorio"
+					emptyMessage="Nenhum registro encontrado" paginator="true"
+					value="#{gastosBean.gastos}" var="gasto" rows="5">
+					<p:column headerText="Descrição">
+						<h:outputText value="#{gasto.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{gasto.valor}" />
+					</p:column>
+
+					<p:column headerText="Data">
+
+					</p:column>
+
+					<p:column headerText="Tipo">
+						<h:outputText value="#{gasto.tipo.nome}" />
+					</p:column>
+
+					<p:column headerText="Parcelas">
+						<h:outputText value="#{gasto.parcelas}" />
+					</p:column>
+
+					<p:column headerText="Debito">
+						<h:outputText value="#{gasto.debito}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+						<p:commandButton icon="ui-icon-trash"
+							actionListener="#{gastosBean.excluir}"
+							update=":formReport:tabrelatorio">
+							<f:attribute name="gastoSelecionado" value="#{gasto}" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-pencil" />
+					</p:column>
+				</p:dataTable>
+				<h:panelGrid columns="1">
+					<p:outputLabel value="Tag:" />
+					<p:selectOneMenu value="tag" />
+					<p:outputLabel value="Data de Início:" />
+					<p:calendar />
+					<p:outputLabel value="Data de Fim:" />
+					<p:calendar />
+					<p:commandButton value="Buscar" />
+				</h:panelGrid>
+			</h:panelGrid>
+
+
+		</h:form>
+	</p:dialog>
+
+</h:body>
+</html>
