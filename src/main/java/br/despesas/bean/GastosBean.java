@@ -2,6 +2,7 @@ package br.despesas.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -16,9 +17,6 @@ import br.despesas.dao.TipoDao;
 import br.despesas.domain.Gastos;
 import br.despesas.domain.Tipo;
 
-
-
-
 @SuppressWarnings({ "serial", "unused" })
 @ManagedBean
 @ViewScoped
@@ -27,41 +25,34 @@ public class GastosBean implements Serializable {
 	private Gastos gasto;
 	private Tipo tipo;
 	private List<Tipo> tipos;
-		
+
 	public Tipo getTipo() {
 		return tipo;
 	}
-
 
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
 
-
 	public List<Tipo> getTipos() {
 		return tipos;
 	}
-
 
 	public void setTipos(List<Tipo> tipos) {
 		this.tipos = tipos;
 	}
 
-
 	public List<Gastos> getGastos() {
 		return gastos;
 	}
-
 
 	public void setGastos(List<Gastos> gastos) {
 		this.gastos = gastos;
 	}
 
-
 	public Gastos getGasto() {
 		return gasto;
 	}
-
 
 	public void setGasto(Gastos gasto) {
 		this.gasto = gasto;
@@ -69,49 +60,60 @@ public class GastosBean implements Serializable {
 
 	@PostConstruct
 	public void listar() {
-		//tipos = new ArrayList<Tipo>();
+		// tipos = new ArrayList<Tipo>();
 		try {
-			
+
 			GastosDao gastosdao = new GastosDao();
 			gastos = gastosdao.listar();
 			novo();
-			gasto.setParcelas(new Short("0"));
+			gasto.setParcelas(new Short("1"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	public void novo() {
 		try {
 			gasto = new Gastos();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void salvar() {
 		try {
-			
-			GastosDao gastosdao = new GastosDao();
-			gastosdao.merge(gasto);
+			if (gasto.getParcelas() != 1) {
+				for (int i = 0; i < gasto.getParcelas(); i++) {
+					GastosDao gastosdao = new GastosDao();
+					gastosdao.merge(gasto);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(gasto.getHorario());
+					cal.add(Calendar.MONTH,1);
+					gasto.setHorario(cal.getTime());
 					
-			novo();
-			gasto.setParcelas(new Short("0"));
-			gastos = gastosdao.listar();
-			
+				}
+				novo();
+				gasto.setParcelas(new Short("1"));
+				GastosDao gastosdao = new GastosDao();
+				gastos = gastosdao.listar();
+			} else {
+				GastosDao gastosdao = new GastosDao();
+				gastosdao.merge(gasto);
+
+				novo();
+				gasto.setParcelas(new Short("1"));
+				gastos = gastosdao.listar();
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
-	
-	
+
 	public void excluir(ActionEvent evento) {
 		try {
 			gasto = (Gastos) evento.getComponent().getAttributes().get("gastoSelecionado");
@@ -119,14 +121,11 @@ public class GastosBean implements Serializable {
 			gastosdao.excluir(gasto);
 			novo();
 			gastos = gastosdao.listar();
-			
-			
-		}catch (RuntimeException e) {
+
+		} catch (RuntimeException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-		
-	
+
 }
