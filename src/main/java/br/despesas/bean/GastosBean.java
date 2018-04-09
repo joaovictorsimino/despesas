@@ -98,7 +98,7 @@ public class GastosBean implements Serializable {
 			GastosDao gastosdao = new GastosDao();
 			gastosdao.merge(gasto);
 					
-			
+			novo();
 			gastos = gastosdao.listar();
 			
 

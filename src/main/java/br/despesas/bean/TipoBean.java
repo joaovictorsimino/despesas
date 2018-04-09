@@ -44,14 +44,26 @@ public class TipoBean implements Serializable {
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
+    
+
+	public Gastos getGasto() {
+		return gasto;
+	}
+
+
+	public void setGasto(Gastos gasto) {
+		this.gasto = gasto;
+	}
 
 
 	@PostConstruct
 	public void listar() {
 		
 		try {
+			gasto = new Gastos();
 			TipoDao tipodao = new TipoDao();
 			tipos = tipodao.listar();
+			
 			
 
 		} catch (Exception e) {
