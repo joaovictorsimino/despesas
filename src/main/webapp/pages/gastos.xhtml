@@ -12,11 +12,13 @@
 	<h:form id="formCadastro">
 		<p:panel id="panelcad" header="Cadastro">
 			<h:panelGrid columns="4">
-				<p:outputLabel value="Descrição:" />
-				<p:inputText value="#{gastosBean.gasto.nome}" />
+				<p:outputLabel value="Descrição:" for="nome" />
+				<p:inputText value="#{gastosBean.gasto.nome}" required="true"
+					id="nome" />
 
-				<p:outputLabel value="Valor:" />
-				<p:inputText value="#{gastosBean.gasto.valor}" />
+				<p:outputLabel value="Valor:" for="valor" />
+				<p:inputText value="#{gastosBean.gasto.valor}" required="true"
+					id="valor" />
 
 				<p:outputLabel for="menu" value="Tag Tipo:" />
 
@@ -30,8 +32,9 @@
 						itemValue="#{tipo}" itemLabel="#{tipo.nome}" />
 				</p:selectOneMenu>
 
-				<p:outputLabel value="Data:" />
-				<p:calendar value="#{gastosBean.gasto.horario}" />
+				<p:outputLabel value="Data:" for="data" />
+				<p:calendar value="#{gastosBean.gasto.horario}" required="true"
+					id="data" locale="pt_BR" />
 
 				<p:outputLabel value="Debito:" />
 				<p:selectBooleanCheckbox value="#{gastosBean.gasto.debito}">
@@ -41,8 +44,11 @@
 
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<p:outputLabel value="Parcelas:" />
-				<p:inputText value="#{gastosBean.gasto.parcelas}" />
+				<p:outputLabel value="Parcelas:" for="parcelas" />
+				<p:inputText value="#{gastosBean.gasto.parcelas}" required="true"
+					id="parcelas">
+
+				</p:inputText>
 				<p:commandButton value="Salvar"
 					actionListener="#{gastosBean.salvar()}"
 					update=":formCadastro:panelcad">
@@ -59,7 +65,7 @@
 				<p:commandButton value="Relatório"
 					actionListener="#{gastosBean.listar}"
 					oncomplete="PF('dialogo3').show();"
-					update=":formCadastro:panelcad :formReport:tabrelatorio">
+					update=":formCadastro:panelcad :formReport:tabrelatorio formReport:filterTag ">
 					<f:actionListener
 						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 				</p:commandButton>
@@ -103,8 +109,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<p:commandButton value="Sair" oncomplete="PF('dialogo').hide();"
-					actionListener="#{tipoBean.listar()}"
-					update=":formCadastro:menu">
+					actionListener="#{tipoBean.listar()}" update=":formCadastro:menu">
 
 				</p:commandButton>
 			</h:panelGrid>
@@ -148,7 +153,9 @@
 					</p:column>
 
 					<p:column headerText="Data">
-
+						<h:outputText value="#{gasto.horario}">
+							<f:convertDateTime locale="pt_BR" dateStyle="medium" />
+						</h:outputText>
 					</p:column>
 
 					<p:column headerText="Tipo">
@@ -174,7 +181,13 @@
 				</p:dataTable>
 				<h:panelGrid columns="1">
 					<p:outputLabel value="Tag:" />
-					<p:selectOneMenu value="tag" />
+					<p:selectOneMenu id="filterTag" filter="true"
+						converter="omnifaces.SelectItemsConverter" required="true">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione uma tipo" />
+						<f:selectItems value="#{tipoBean.tipos}" var="tipo"
+							itemValue="#{tipo}" itemLabel="#{tipo.nome}" />
+					</p:selectOneMenu>
 					<p:outputLabel value="Data de Início:" />
 					<p:calendar />
 					<p:outputLabel value="Data de Fim:" />

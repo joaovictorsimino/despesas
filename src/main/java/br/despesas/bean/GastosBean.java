@@ -75,6 +75,7 @@ public class GastosBean implements Serializable {
 			GastosDao gastosdao = new GastosDao();
 			gastos = gastosdao.listar();
 			novo();
+			gasto.setParcelas(new Short("0"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,6 +100,7 @@ public class GastosBean implements Serializable {
 			gastosdao.merge(gasto);
 					
 			novo();
+			gasto.setParcelas(new Short("0"));
 			gastos = gastosdao.listar();
 			
 
