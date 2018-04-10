@@ -1,12 +1,15 @@
 package br.despesas.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
@@ -25,6 +28,25 @@ public class GastosBean implements Serializable {
 	private Gastos gasto;
 	private Tipo tipo;
 	private List<Tipo> tipos;
+	private Date di;
+	private Date df;
+	
+	
+	public Date getDi() {
+		return di;
+	}
+
+	public void setDi(Date di) {
+		this.di = di;
+	}
+
+	public Date getDf() {
+		return df;
+	}
+
+	public void setDf(Date df) {
+		this.df = df;
+	}
 
 	public Tipo getTipo() {
 		return tipo;
@@ -62,12 +84,17 @@ public class GastosBean implements Serializable {
 	public void listar() {
 		// tipos = new ArrayList<Tipo>();
 		try {
-
+			
 			GastosDao gastosdao = new GastosDao();
 			gastos = gastosdao.listar();
 			novo();
 			gasto.setParcelas(new Short("1"));
-
+			gasto.setValor(new BigDecimal("0"));
+			gasto.setHorario(new Date());
+			
+			di = new Date();
+			df = new Date();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -97,6 +124,8 @@ public class GastosBean implements Serializable {
 				}
 				novo();
 				gasto.setParcelas(new Short("1"));
+				gasto.setValor(new BigDecimal("0"));
+				gasto.setHorario(new Date());
 				GastosDao gastosdao = new GastosDao();
 				gastos = gastosdao.listar();
 			} else {
@@ -105,6 +134,8 @@ public class GastosBean implements Serializable {
 
 				novo();
 				gasto.setParcelas(new Short("1"));
+				gasto.setValor(new BigDecimal("0"));
+				gasto.setHorario(new Date());
 				gastos = gastosdao.listar();
 			}
 
@@ -127,5 +158,37 @@ public class GastosBean implements Serializable {
 		}
 
 	}
+	
+	public void buscar() {
+		// tipos = new ArrayList<Tipo>();
+		try {
+
+			GastosDao gastosdao = new GastosDao();
+			gastos = gastosdao.listar();
+			novo();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void filtrar() {
+			
+		
+		try {
+			
+			GastosDao gastosdao = new GastosDao();
+			gastos = gastosdao.filtro(di,df);
+			novo();
+			
+			
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	
 
 }
