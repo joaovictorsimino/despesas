@@ -37,7 +37,7 @@
 						itemValue="#{tipo}" itemLabel="#{tipo.nome}" />
 				</p:selectOneMenu>
 
-				<p:outputLabel value="Data:" for="data" />
+				<p:outputLabel value="Data:" for="data" title="Dia de vencimento primeira parcela"/>
 				<p:calendar value="#{gastosBean.gasto.horario}" required="true"
 					id="data" locale="pt_BR" size="10" />
 
