@@ -8,6 +8,11 @@
 	<!-- Nome da Aplicação -->
 	<display-name>Despesas</display-name>
 
+	<!-- Pagina Principal -->
+	<welcome-file-list>
+		<welcome-file>pages/testeJSF.xhtml</welcome-file>
+	</welcome-file-list>
+	
 	<!-- Estágio do Projeto -->
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
