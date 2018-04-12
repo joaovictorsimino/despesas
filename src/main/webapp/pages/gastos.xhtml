@@ -1,229 +1,230 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
-<h:head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Gastos Pessoais</title>
-</h:head>
-<h:body>
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/modelo.xhtml">
 
-	<p:growl id="mensagem" />
-	<h:form id="formCadastro">
-		<p:panel id="panelcad" header="Cadastro">
-			<h:panelGrid columns="4">
-				<p:outputLabel value="Descrição:" for="nome" />
-				<p:inputText value="#{gastosBean.gasto.nome}" required="true"
-					id="nome" />
+	<ui:define name="conteudo">
+		<p:growl id="mensagem" />
+		<h:form id="formCadastro">
+			<p:panel id="panelcad" header="Cadastro">
+				<h:panelGrid columns="4">
+					<p:outputLabel value="Descrição:" for="nome" />
+					<p:inputText value="#{gastosBean.gasto.nome}" required="true"
+						id="nome" />
 
-				<p:outputLabel value="Valor:" for="valor" />
-				<p:inputText value="#{gastosBean.gasto.valor}" required="true"
-					id="valor" maxlength="7" size="10">
-					<f:validateDoubleRange minimum="0.01" maximum="9999.99" />
-					<f:convertNumber locale="pt_BR" minFractionDigits="2" />
-				</p:inputText>
+					<p:outputLabel value="Valor:" for="valor" />
+					<p:inputText value="#{gastosBean.gasto.valor}" required="true"
+						id="valor" maxlength="7" size="10">
+						<f:validateDoubleRange minimum="0.01" maximum="9999.99" />
+						<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+					</p:inputText>
 
-				<p:outputLabel for="menu" value="Tag Tipo:" />
+					<p:outputLabel for="menu" value="Tag Tipo:" />
 
-				<p:selectOneMenu id="menu" filter="true"
-					value="#{gastosBean.gasto.tipo}"
-					converter="omnifaces.SelectItemsConverter" required="true"
-					requiredMessage="O campo tipo é obrigatório">
-					<f:selectItem noSelectionOption="true"
-						itemLabel="Selecione um tipo" />
-					<f:selectItems value="#{tipoBean.tipos}" var="tipo"
-						itemValue="#{tipo}" itemLabel="#{tipo.nome}" />
-				</p:selectOneMenu>
+					<p:selectOneMenu id="menu" filter="true"
+						value="#{gastosBean.gasto.tipo}"
+						converter="omnifaces.SelectItemsConverter" required="true"
+						requiredMessage="O campo tipo é obrigatório">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione um tipo" />
+						<f:selectItems value="#{tipoBean.tipos}" var="tipo"
+							itemValue="#{tipo}" itemLabel="#{tipo.nome}" />
+					</p:selectOneMenu>
 
-				<p:outputLabel value="Data:" for="data" title="Dia de vencimento primeira parcela"/>
-				<p:calendar value="#{gastosBean.gasto.horario}" required="true"
-					id="data" locale="pt_BR" size="10" />
+					<p:outputLabel value="Data:" for="data"
+						title="Dia de vencimento primeira parcela" />
+					<p:calendar value="#{gastosBean.gasto.horario}" required="true"
+						id="data" locale="pt_BR" size="10" />
 
-				<p:outputLabel value="Debito:" />
-				<p:selectBooleanCheckbox value="#{gastosBean.gasto.debito}">
-					<f:selectItem itemValue="débito" itemLabel="Débito" />
-				</p:selectBooleanCheckbox>
-
-
-			</h:panelGrid>
-			<h:panelGrid columns="2">
-				<p:outputLabel value="Parcelas:" for="parcelas" />
-				<p:inputText value="#{gastosBean.gasto.parcelas}" required="true"
-					id="parcelas">
-
-				</p:inputText>
-				<p:commandButton value="Salvar"
-					actionListener="#{gastosBean.salvar()}"
-					update=":formCadastro:panelcad">
-					<f:actionListener
-						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
-				</p:commandButton>
-				<p:commandButton value="Cadastro"
-					actionListener="#{tipoBean.listar}"
-					oncomplete="PF('dialogo').show();"
-					update=":formCadastro:panelcad :formCadastroTag:tabelaTag">
-					<f:actionListener
-						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
-				</p:commandButton>
-				<p:commandButton value="Relatório"
-					actionListener="#{gastosBean.listar}"
-					oncomplete="PF('dialogo3').show();"
-					update=":formCadastro:panelcad :formReport:tabrelatorio">
-					<f:actionListener
-						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
-				</p:commandButton>
-				<p:commandButton value="Clear" type="reset"
-					update=":formCadastro:panelcad"
-					actionListener="#{gastosBean.novo()}">
-					<f:actionListener
-						type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
-				</p:commandButton>
-			</h:panelGrid>
+					<p:outputLabel value="Debito:" />
+					<p:selectBooleanCheckbox value="#{gastosBean.gasto.debito}">
+						<f:selectItem itemValue="débito" itemLabel="Débito" />
+					</p:selectBooleanCheckbox>
 
 
-
-		</p:panel>
-	</h:form>
-
-
-
-	<p:dialog header="Tipos de Tag - Cadastro" widgetVar="dialogo"
-		draggable="false" resizable="false" modal="true" closable="true">
-		<h:form id="formCadastroTag">
-			<h:panelGrid id="painel" columns="2">
-				<p:dataTable id="tabelaTag"
-					emptyMessage="Nenhum registro encontrado" paginator="true"
-					value="#{tipoBean.tipos}" var="tipo" rows="5">
-					<p:column headerText="Tipos de despesas" filterBy="#{tipo.nome}"
-						sortBy="#{tipo.nome}">
-						<h:outputText value="#{tipo.nome}" />
-					</p:column>
-					<p:column>
-						<p:commandButton icon="ui-icon-trash"
-							actionListener="#{tipoBean.excluir}"
-							update="mensagem :formCadastroTag:tabelaTag">
-							<p:confirm header="Confirmação"
-								message="Você tem certeza que deseja excluir o tipo?"
-								icon="ui-icon-alert" />
-							<f:attribute name="tipoSelecionado" value="#{tipo}" />
-						</p:commandButton>
-					</p:column>
-
-
-				</p:dataTable>
-				<p:confirmDialog global="true">
-					<p:commandButton value="yes" type="button"
-						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-					<p:commandButton value="no" type="button"
-						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-				</p:confirmDialog>
-				<h:panelGrid columns="1">
-					<p:commandButton value="Adicionar"
-						actionListener="#{tipoBean.novo()}"
-						oncomplete="PF('dialogo2').show();"
-						update=":NovoCadastroTag:painel2" />
 				</h:panelGrid>
-			</h:panelGrid>
-			<h:panelGrid columns="1">
-				<p:commandButton value="Sair" oncomplete="PF('dialogo').hide();"
-					actionListener="#{tipoBean.listar()}" update=":formCadastro:menu">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Parcelas:" for="parcelas" />
+					<p:inputText value="#{gastosBean.gasto.parcelas}" required="true"
+						id="parcelas">
 
-				</p:commandButton>
-			</h:panelGrid>
-
-		</h:form>
-	</p:dialog>
-
-	<p:dialog header="Cadastro nova tag" widgetVar="dialogo2"
-		draggable="false" resizable="false" modal="true" closable="true">
-		<h:form id="NovoCadastroTag">
-			<h:panelGrid id="painel2" columns="2">
-				<p:outputLabel value="Descrição:" />
-				<p:inputText id="name" maxlength="50" size="30" required="true"
-					value="#{tipoBean.tipo.nome}"
-					requiredMessage="O campo nome é obrigatório" />
-			</h:panelGrid>
-			<h:panelGrid columns="1">
-				<p:commandButton value="Salvar" oncomplete="PF('dialogo2').hide();"
-					actionListener="#{tipoBean.salvar}"
-					update=":formCadastroTag:tabelaTag :NovoCadastroTag">
-				</p:commandButton>
-			</h:panelGrid>
-
-		</h:form>
-	</p:dialog>
-
-
-	<p:dialog header="Report" widgetVar="dialogo3" draggable="false"
-		resizable="false" modal="true" closable="true">
-		<h:form id="formReport">
-			<h:panelGrid id="painel3" columns="2">
-				<p:dataTable id="tabrelatorio"
-					emptyMessage="Nenhum registro encontrado" paginator="true"
-					value="#{gastosBean.gastos}" var="gasto" rows="5">
-					<p:column headerText="Descrição" sortBy="#{gasto.nome}"
-						filterBy="#{gasto.nome}">
-						<h:outputText value="#{gasto.nome}" />
-					</p:column>
-
-					<p:column headerText="Valor" sortBy="#{gasto.valor}">
-						<h:outputText value="#{gasto.valor}">
-							<f:convertNumber locale="pt_BR" minFractionDigits="2" />
-						</h:outputText>
-					</p:column>
-
-					<p:column headerText="Data" sortBy="#{gasto.horario}">
-						<h:outputText value="#{gasto.horario}">
-							<f:convertDateTime locale="pt_BR" dateStyle="medium" />
-						</h:outputText>
-					</p:column>
-
-					<p:column headerText="Tipo" sortBy="#{gasto.tipo.nome}"
-						filterBy="#{gasto.tipo.nome}">
-						<h:outputText value="#{gasto.tipo.nome}" />
-					</p:column>
-
-					<p:column headerText="Parcelas" sortBy="#{gasto.parcelas}">
-						<h:outputText value="#{gasto.parcelas}" />
-					</p:column>
-
-					<p:column headerText="Debito" sortBy="#{gasto.debito}">
-						<h:outputText value="#{gasto.debito}" />
-					</p:column>
-
-					<p:column headerText="Opções">
-						<p:commandButton icon="ui-icon-trash"
-							actionListener="#{gastosBean.excluir}"
-							update="mensagem :formReport:tabrelatorio">
-							<p:confirm header="Confirmação"
-								message="Você tem certeza que deseja excluir o gasto?"
-								icon="ui-icon-alert" />
-							<f:attribute name="gastoSelecionado" value="#{gasto}" />
-						</p:commandButton>
-						<p:commandButton icon="ui-icon-pencil" />
-					</p:column>
-				</p:dataTable>
-				<h:panelGrid columns="1">
-
-					<p:outputLabel value="Data de Início:" id="di" />
-					<p:calendar size="6" locale="pt_BR" value="#{gastosBean.di}" />
-					<p:outputLabel value="Data de Fim:" />
-					<p:calendar size="6" locale="pt_BR" value="#{gastosBean.df}" id="df"/>
-					<p:commandButton value="Buscar"
-						actionListener="#{gastosBean.filtrar}"
-						update=":formReport:tabrelatorio" />
-
-					<p:commandButton value="Limpar"
+					</p:inputText>
+					<p:commandButton value="Salvar"
+						actionListener="#{gastosBean.salvar()}"
+						update=":formCadastro:panelcad">
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+					<p:commandButton value="Cadastro"
+						actionListener="#{tipoBean.listar}"
+						oncomplete="PF('dialogo').show();"
+						update=":formCadastro:panelcad :formCadastroTag:tabelaTag">
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+					<p:commandButton value="Relatório"
 						actionListener="#{gastosBean.listar}"
-						update=":formCadastro:panelcad :formReport:tabrelatorio :formReport:di :formReport:df" />
+						oncomplete="PF('dialogo3').show();"
+						update=":formCadastro:panelcad :formReport:tabrelatorio">
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+					<p:commandButton value="Clear" type="reset"
+						update=":formCadastro:panelcad"
+						actionListener="#{gastosBean.novo()}">
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
 				</h:panelGrid>
-			</h:panelGrid>
 
 
+
+			</p:panel>
 		</h:form>
-	</p:dialog>
 
-</h:body>
-</html>
+
+
+		<p:dialog header="Tipos de Tag - Cadastro" widgetVar="dialogo"
+			draggable="false" resizable="false" modal="true" closable="true">
+			<h:form id="formCadastroTag">
+				<h:panelGrid id="painel" columns="2">
+					<p:dataTable id="tabelaTag"
+						emptyMessage="Nenhum registro encontrado" paginator="true"
+						value="#{tipoBean.tipos}" var="tipo" rows="5">
+						<p:column headerText="Tipos de despesas" filterBy="#{tipo.nome}"
+							sortBy="#{tipo.nome}">
+							<h:outputText value="#{tipo.nome}" />
+						</p:column>
+						<p:column>
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{tipoBean.excluir}"
+								update="mensagem :formCadastroTag:tabelaTag">
+								<p:confirm header="Confirmação"
+									message="Você tem certeza que deseja excluir o tipo?"
+									icon="ui-icon-alert" />
+								<f:attribute name="tipoSelecionado" value="#{tipo}" />
+							</p:commandButton>
+						</p:column>
+
+
+					</p:dataTable>
+					<p:confirmDialog global="true">
+						<p:commandButton value="yes" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="no" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+					<h:panelGrid columns="1">
+						<p:commandButton value="Adicionar"
+							actionListener="#{tipoBean.novo()}"
+							oncomplete="PF('dialogo2').show();"
+							update=":NovoCadastroTag:painel2" />
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<p:commandButton value="Sair" oncomplete="PF('dialogo').hide();"
+						actionListener="#{tipoBean.listar()}" update=":formCadastro:menu">
+
+					</p:commandButton>
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Cadastro nova tag" widgetVar="dialogo2"
+			draggable="false" resizable="false" modal="true" closable="true">
+			<h:form id="NovoCadastroTag">
+				<h:panelGrid id="painel2" columns="2">
+					<p:outputLabel value="Descrição:" />
+					<p:inputText id="name" maxlength="50" size="30" required="true"
+						value="#{tipoBean.tipo.nome}"
+						requiredMessage="O campo nome é obrigatório" />
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<p:commandButton value="Salvar" oncomplete="PF('dialogo2').hide();"
+						actionListener="#{tipoBean.salvar}"
+						update=":formCadastroTag:tabelaTag :NovoCadastroTag">
+					</p:commandButton>
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog header="Report" widgetVar="dialogo3" draggable="false"
+			resizable="false" modal="true" closable="true">
+			<h:form id="formReport">
+				<h:panelGrid id="painel3" columns="2">
+					<p:dataTable id="tabrelatorio"
+						emptyMessage="Nenhum registro encontrado" paginator="true"
+						value="#{gastosBean.gastos}" var="gasto" rows="5">
+						<p:column headerText="Descrição" sortBy="#{gasto.nome}"
+							filterBy="#{gasto.nome}">
+							<h:outputText value="#{gasto.nome}" />
+						</p:column>
+
+						<p:column headerText="Valor" sortBy="#{gasto.valor}">
+							<h:outputText value="#{gasto.valor}">
+								<f:convertNumber locale="pt_BR" minFractionDigits="2" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Data" sortBy="#{gasto.horario}">
+							<h:outputText value="#{gasto.horario}">
+								<f:convertDateTime locale="pt_BR" dateStyle="medium" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Tipo" sortBy="#{gasto.tipo.nome}"
+							filterBy="#{gasto.tipo.nome}">
+							<h:outputText value="#{gasto.tipo.nome}" />
+						</p:column>
+
+						<p:column headerText="Parcelas" sortBy="#{gasto.parcelas}">
+							<h:outputText value="#{gasto.parcelas}" />
+						</p:column>
+
+						<p:column headerText="Debito" sortBy="#{gasto.debito}">
+							<h:outputText value="#{gasto.debito}" />
+						</p:column>
+
+						<p:column headerText="Opções">
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{gastosBean.excluir}"
+								update="mensagem :formReport:tabrelatorio">
+								<p:confirm header="Confirmação"
+									message="Você tem certeza que deseja excluir o gasto?"
+									icon="ui-icon-alert" />
+								<f:attribute name="gastoSelecionado" value="#{gasto}" />
+							</p:commandButton>
+							<p:commandButton icon="ui-icon-pencil" />
+						</p:column>
+					</p:dataTable>
+					<h:panelGrid columns="1">
+
+						<p:outputLabel value="Data de Início:" id="di" />
+						<p:calendar size="6" locale="pt_BR" value="#{gastosBean.di}" />
+						<p:outputLabel value="Data de Fim:" />
+						<p:calendar size="6" locale="pt_BR" value="#{gastosBean.df}"
+							id="df" />
+						<p:commandButton value="Buscar"
+							actionListener="#{gastosBean.filtrar}"
+							update=":formReport:tabrelatorio" />
+
+						<p:commandButton value="Limpar"
+							actionListener="#{gastosBean.listar}"
+							update=":formCadastro:panelcad :formReport:tabrelatorio :formReport:di :formReport:df" />
+					</h:panelGrid>
+				</h:panelGrid>
+
+
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>
