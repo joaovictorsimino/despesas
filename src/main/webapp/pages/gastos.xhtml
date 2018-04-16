@@ -63,16 +63,14 @@
 					<p:commandButton value="Cadastro"
 						actionListener="#{tipoBean.listar}"
 						oncomplete="PF('dialogo').show();"
-						update=":formCadastro:panelcad :formCadastroTag:tabelaTag"
-						process="@this">
+						update=":formCadastro:panelcad :formCadastroTag:tabelaTag">
 						<f:actionListener
 							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 					</p:commandButton>
 					<p:commandButton value="Relatório"
 						actionListener="#{gastosBean.listar}"
 						oncomplete="PF('dialogo3').show();"
-						update=":formCadastro:panelcad :formReport:tabrelatorio"
-						process="@this">
+						update=":formCadastro:panelcad :formReport:tabrelatorio">
 						<f:actionListener
 							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
 					</p:commandButton>

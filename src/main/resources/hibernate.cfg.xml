@@ -31,11 +31,13 @@
 
 		<!-- Cria as tabelas do banco de dados -->
 		<property name="hbm2ddl.auto">update</property>
-		
+
 		<!-- Mapeamento das entidades -->
-		<mapping class="br.despesas.domain.Gastos"/>
-		<mapping class="br.despesas.domain.Tipo"/>
-		
+		<mapping class="br.despesas.domain.Gastos" />
+		<mapping class="br.despesas.domain.Tipo" />
+		<mapping class="br.despesas.domain.Usuario" />
+
+
 	</session-factory>
-		
+
 </hibernate-configuration>
